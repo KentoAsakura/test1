@@ -3,6 +3,10 @@ FROM golang:latest
 WORKDIR /app
 COPY ./app /app
 COPY ./templates ../templates
+COPY ./css ../css
+COPY ./images ../images
+COPY ./js ../js
+COPY ./QRCode ../QRCode
 
 
 RUN go mod init main \
