@@ -7,7 +7,6 @@ import(
 	"html/template"
 	"io"
 	"log"
-	"test1/User"
 )
 
 type TemplateRenderer struct{
@@ -26,6 +25,21 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 var e=createMux()
 
 
+
+
+type User struct{
+	UserName string
+	PhoneNumber string
+}
+
+
+
+func CreateUser(name string,phoneNumber string)User{
+	var user User
+	user.UserName=name
+	user.PhoneNumber=phoneNumber
+	return user
+}
 func main(){
 	e.Renderer=&TemplateRenderer{
 		templates:template.Must(template.ParseGlob("../templates/*.html")),
@@ -59,7 +73,8 @@ func createMux()*echo.Echo{
 func loginHandler(c echo.Context)error{
 	username:=c.FormValue("username")
 	phoneNumber:=c.FormValue("phoneNumber")
-	user:=User.CreateUser(username,phoneNumber)
+	// user:=User.CreateUser(username,phoneNumber)
+	user:=CreateUser(username,phoneNumber)
 	if user.UserName=="test"&&user.PhoneNumber=="111"{
 		return c.Render(http.StatusOK,"index.html",nil)
 	}else{

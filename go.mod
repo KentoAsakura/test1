@@ -1,4 +1,4 @@
-module test1
+module github.com/KentoAsakura/test1
 
 go 1.20
 
