@@ -98,8 +98,13 @@ func main(){
 
 	// ユーザー登録のルーティング
 	e.POST("/register", registerHandler)
-
-	e.Logger.Fatal(e.Start(":8080"))
+	port:=os.Getenv("PORT")
+	if port==""{
+		port="8080"
+		log.Printf("DEfaulting to port %s",port)
+	}
+	log.Printf("Listening on port %s",port)
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s",port)))
 }
 
 func CreateQRCode(phoneNumber string) (string) {

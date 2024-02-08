@@ -1,0 +1,14 @@
+docker-compose build
+docker-compose up -d
+
+
+
+gcpデプロイ
+docker push gcr.io/bold-flash-413614/test1-api:latest
+
+gcloud run deploy test1-00004-4lh \
+  --image gcr.io/bold-flash-413614/test1-api:latest \
+  --platform managed \
+  --allow-unauthenticated \
+  --region us-west1
+
