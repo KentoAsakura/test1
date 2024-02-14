@@ -78,14 +78,19 @@ func main(){
 		templates:template.Must(template.ParseGlob("../templates/*.html")),
 	}
 
-	e.GET("/main",func(c echo.Context)error{
+	e.GET("/",func(c echo.Context)error{
 		return c.Render(http.StatusOK,"index.html",nil)
 	})
+
 
 
 	// ログインフォームの表示用のルーティング
 	e.GET("/login", func(c echo.Context) error {
 		return c.Render(http.StatusOK, "login.html", nil)
+	})
+
+	e.GET("/signup",func(c echo.Context)error{
+		return c.Render(http.StatusOK,"signup.html",nil)
 	})
 
 	e.Static("/css","../css")
@@ -97,12 +102,15 @@ func main(){
 	e.POST("/login", loginHandler)
 
 	// ユーザー登録のルーティング
-	e.POST("/register", registerHandler)
+	e.POST("/signup", signupHandler)
 	port:=os.Getenv("PORT")
 	if port==""{
 		port="8080"
 		log.Printf("DEfaulting to port %s",port)
 	}
+
+
+
 	log.Printf("Listening on port %s",port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s",port)))
 }
@@ -151,7 +159,7 @@ func loginHandler(c echo.Context) error {
 	})
 }
 
-func registerHandler(c echo.Context) error {
+func signupHandler(c echo.Context) error {
     username := c.FormValue("username")
     password := c.FormValue("phoneNumber")
 
