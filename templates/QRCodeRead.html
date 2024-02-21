@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Reader</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.js"></script>
+</head>
+<body>
+    <video id="videoElement" autoplay playsinline></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script>
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.onloadedmetadata = function(e) {
+                    video.play();
+                };
+            })
+            .catch(function(err) {
+                alert('Error accessing camera');
+            });
+
+        video.addEventListener('play', function () {
+            setInterval(function () {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const qrCode = jsQR(context.getImageData(0, 0, canvas.width, canvas.height).data, canvas.width, canvas.height);
+                if (qrCode) {
+                    console.log('QR Code Data:', qrCode.data);
+                    document.body.innerHTML += '<p>QR Code Data: ' + qrCode.data + '</p>';
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

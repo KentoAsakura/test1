@@ -1,0 +1,268 @@
+.toggle-button-4 {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 150px;
+    height: 75px;
+    border-radius: 50px;
+    box-sizing: content-box;
+    background-color: #ff8d8d33;
+    cursor: pointer;
+    transition: background-color .4s;
+    margin: 0 auto;
+}
+
+.toggle-button-4:has(:checked) {
+    background-color: #75bbff33;
+}
+
+.toggle-button-4::before {
+    position: absolute;
+    left: 5px;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background-color: #ff8d8d;
+    content: '';
+    transition: left .4s;
+}
+
+.toggle-button-4:has(:checked)::before {
+    left: 75px;
+    background-color: #75bbff;
+}
+
+.toggle-button-4::after {
+    position: absolute;
+    left: 36px;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.2em;
+    content: '新婦側';
+    transition: left .4s;
+    white-space: nowrap;
+}
+
+.toggle-button-4:has(:checked)::after {
+    left: 107px;
+    content: '新郎側';
+    white-space: nowrap;
+}
+
+.toggle-button-4 input {
+    display: none;
+}
+
+
+
+
+.spinner-container {
+    display: flex;
+    /* justify-content: flex-end; */
+    align-items:center;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.spinner {
+    width: 80px;
+    font-size:1.2em;
+    padding: 0;
+    text-align: center;
+    border: none;
+    background: none;
+    outline: none;
+    pointer-events: none;
+}
+
+.spinner::-webkit-inner-spin-button,
+.spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    font-size:1.2em;
+}
+
+.spinner-sub,
+.spinner-add {
+    display: block;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 50px;
+}
+
+.disabled {
+    opacity: 0.3;
+    cursor: inherit;
+}
+
+
+
+
+
+.Form {
+    margin-top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 720px;
+}
+
+@media screen and (max-width: auto) {
+    .Form {
+        margin-top: 40px;
+    }
+}
+
+.Form-Item {
+    border-top: 1px solid #ddd;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    /* width: 100%; */
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+    .Form-Item {
+        padding-left: 14px;
+        padding-right: 14px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        flex-wrap: wrap;
+    }
+}
+
+.Form-Item:nth-child(5) {
+    border-bottom: 1px solid #ddd;
+}
+
+.Form-Item-Label {
+    width: 100%;
+    max-width: 248px;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+@media screen and (max-width: auto) {
+    .Form-Item-Label {
+        max-width: inherit;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+    }
+}
+
+.Form-Item-Label.isMsg {
+    margin-top: 8px;
+    margin-bottom: auto;
+}
+
+@media screen and (max-width: 480px) {
+    .Form-Item-Label.isMsg {
+        margin-top: 0;
+    }
+}
+
+.Form-Item-Label-Required {
+    border-radius: 6px;
+    margin-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 48px;
+    display: inline-block;
+    text-align: center;
+    background: #5bc8ac;
+    color: #fff;
+    font-size: 14px;
+}
+
+@media screen and (max-width: auto) {
+    .Form-Item-Label-Required {
+        border-radius: 4px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        width: 32px;
+        font-size: 10px;
+    }
+}
+
+.Form-Item-Input {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-left: 40px;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 48px;
+    flex: 1;
+    width: 100%;
+    max-width: 410px;
+    background: #eaedf2;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 480px) {
+    .Form-Item-Input {
+        margin-left: 0;
+        margin-top: 18px;
+        height: 40px;
+        flex: inherit;
+        font-size: 15px;
+    }
+}
+
+.Form-Item-Textarea {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-left: 40px;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 216px;
+    flex: 1;
+    width: 100%;
+    max-width: 410px;
+    background: #eaedf2;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 480px) {
+    .Form-Item-Textarea {
+        margin-top: 18px;
+        margin-left: 0;
+        height: 200px;
+        flex: inherit;
+        font-size: 15px;
+    }
+}
+
+.Form-Btn {
+    border-radius: 6px;
+    margin-top: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 280px;
+    display: block;
+    letter-spacing: 0.05em;
+    background: #5bc8ac;
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 480px) {
+    .Form-Btn {
+        margin-top: 24px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        width: 160px;
+        font-size: 16px;
+    }
+}

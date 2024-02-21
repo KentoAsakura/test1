@@ -6,14 +6,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
+    <link rel="stylesheet" media="all" href="css/signup.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/signup.js"></script>
 </head>
+
 <body>
-    <h1>Register a new account</h1>
+    <center><h1>出席登録</h1></center>
     <form action="/signup" method="post">
-        <label for="newUsername">New Username:</label>
-        <input type="text" id="newUsername" name="username" required><br>
-        <label for="newPhoneNumber">New PhoneNumber:</label>
-        <input type="PhoneNumber" id="newPhoneNumber" name="phoneNumber" required><br>
-        <button type="submit">Register</button>
+        <div class="Form">
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    <span class="Form-Item-Label-Required">必須</span>どちら側か<br>
+                    タップで切り替えられます
+                </p>
+                <label class="toggle-button-4">
+                    <input type="checkbox" name="morw" />
+                </label>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    <span class="Form-Item-Label-Required">必須</span>氏名
+                </p>
+                <input type="text" class="Form-Item-Input" placeholder="例）朝倉健登" id="newUsername" name="username"
+                    required><br>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    <span class="Form-Item-Label-Required">必須</span>電話番号<br>
+                    (ハイフンなし11桁)
+                </p>
+                <input type="tel" class="Form-Item-Input" placeholder="例）0120107929" id="newPhoneNumber"
+                    name="phoneNumber" required><br>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    <span class="Form-Item-Label-Required">必須</span>アレルギー情報
+                </p>
+                <textarea class="Form-Item-Textarea" placeholder="例）ある場合：甲殻類アレルギー
+                    ビーガンなど
+    ない場合：特になし　など" id="AllergyInfo" name="allergyInfo" required></textarea><br>
+                </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    同伴者<br>
+                    (ご年配の方が一緒にご出席していただける場合など)
+                </p>
+                <div class="spinner-container">
+                    <span class="spinner-sub disabled">-</span>
+                    <input class="spinner" type="number" min="0" max="20" value="0" name="companion">
+                    <span class="spinner-add">+</span>
+                </div>
+            </div>
+            <input type="submit" class="Form-Btn" value="Sign Up">
+        </div>
     </form>
 </body>
