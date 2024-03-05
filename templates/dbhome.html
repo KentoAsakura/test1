@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    <table border="1">
+        <tr>
+            <th>新郎側か新婦側か(trueが新郎)</th>
+            <th>氏名</th>
+            <th>電話番号</th>
+            <th>アレルギー情報</th>
+            <th>同伴者</th>
+        </tr>
+        {{ range .Users }}
+        <tr>
+            <td>{{ .MenOrWomen }}</td>
+            <td>{{ .UserName }}</td>
+            <td>{{ .PhoneNumber }}</td>
+            <td>{{ .AllergyInfo }}</td>
+            <td>{{ .Companion}}</td>
+        </tr>
+        {{ end }}
+    </table>
+
+    <h1>User Info List</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>電話番号</th>
+            <th>QRCodeNumber</th>
+            <th>Attend</th>
+        </tr>
+        {{ range .UserInfos }}
+        <tr>
+            <td>{{ .ID }}</td>
+            <td>{{ .UserID }}</td>
+            <td>{{ .PhoneNumber }}</td>
+            <td>{{ .QRCODE_Number }}</td>
+            <td>{{ .Attend }}</td>
+        </tr>
+        {{ end }}
+    </table>
+</body>
+</html>

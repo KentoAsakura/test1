@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"sync"
 
 
 	"github.com/boombuler/barcode"
@@ -96,8 +95,9 @@ func main() {
 		return c.Render(http.StatusOK, "QRCodeRead.html", nil)
 	})
 	
-	
-	e.GET("/qrcode/qrcode",getQRCode)
+	e.GET("/dblogin",func(c echo.Context)error{
+		return c.Render(http.StatusOK,"dblogin.html",nil)
+	})
 
 
 	e.Static("/css", "../css")
@@ -110,11 +110,17 @@ func main() {
 
 	// ユーザー登録のルーティング
 	e.POST("/signup", signupHandler)
+
+	e.POST("/scan",QRScanHandler)
+	
+	e.POST("/db",DbConnectionHandler)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 		log.Printf("DEfaulting to port %s", port)
 	}
+
 
 	log.Printf("Listening on port %s", port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
@@ -171,13 +177,18 @@ func signupHandler(c echo.Context) error {
 	if morw!=""{
 		menOrwoman=true
 	}
-	if err := CreateUser(username, password,allergyInfo,companion,menOrwoman); err != nil {
+	
+	user,err := CreateUser(username, password,allergyInfo,companion,menOrwoman)
+	if err!=nil{
 		return c.String(http.StatusInternalServerError, "Failed to create user")
 	}
-	return c.String(http.StatusOK, "User registered successfully")
+	return c.Render(http.StatusOK, "login_success.html", map[string]interface{}{
+		"Username": user.UserName,
+		"img":      user.UserInfo.QRCODE_Number,
+	})
 }
 
-func CreateUser(username, phoneNumber,allergyInfo,companion string,menOrwoman bool) error {
+func CreateUser(username, phoneNumber,allergyInfo,companion string,menOrwoman bool)(*User,error){
 	numCompanion,_:=strconv.Atoi(companion)
 	user := &User{UserName: username, PhoneNumber: phoneNumber,AllergyInfo:allergyInfo,Companion:numCompanion,MenOrWomen:menOrwoman}
 	var userInfo UserInfoMation
@@ -185,21 +196,43 @@ func CreateUser(username, phoneNumber,allergyInfo,companion string,menOrwoman bo
 	userInfo.QRCODE_Number = CreateQRCode(user.PhoneNumber)
 	user.UserInfo = userInfo
 	if err := DB.Create(user).Error; err != nil {
-		return err
+		return nil,err
+	}
+	return user,nil
+}
+
+
+func QRScanHandler(c echo.Context) error {
+	// QRコードデータを取得
+	qrCodeData := c.FormValue("qrCodeData")
+	// クライアントからのQRコードデータを表示
+	return c.String(http.StatusOK, fmt.Sprintf("Received QR Code Data: %s", qrCodeData))
+}
+
+func DbConnectionHandler(c echo.Context)error{
+	passWord:=c.FormValue("password")
+	if(passWord=="kento1201"){
+		return DbOpenHandler(c)
 	}
 	return nil
 }
 
 
-func getQRCode(c echo.Context) error {
-    lock.Lock()
-    defer lock.Unlock()
-
-    qrCodeData = c.QueryParam("data")
-    return c.String(http.StatusOK, qrCodeData)
-}
-
-var (
-    lock       sync.Mutex
-    qrCodeData string
-)
+	func DbOpenHandler(c echo.Context) error {
+		var users []User
+		var userInfos []UserInfoMation
+	
+		// ユーザーデータを取得
+		if err := DB.Find(&users).Error; err != nil {
+			log.Printf("Failed to get users: %v", err)
+		}
+	
+		// ユーザー情報を取得
+		if err := DB.Find(&userInfos).Error; err != nil {
+			log.Printf("Failed to get user infos: %v", err)
+		}
+		return c.Render(http.StatusOK, "dbhome.html", map[string]interface{}{
+			"Users":      users,
+			"UserInfos":  userInfos,
+		})
+	}

@@ -5,19 +5,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="all" href="css/signup.css">
     <title>Login</title>
     
 </head>
 
 <body>
-    <h1>Login</h1>
     <form action="/login" method="post">
-        <label for="phoneNumber">PhoneNumber:</label>
-        <input type="phoneNumber" id="phoneNumber" name="phoneNumber" required><br>
-        <button type="submit">Login</button>
+    <div class="Form">
+        <h1>Login</h1>
+        <div class="Form-Item">
+            <p class="Form-Item-Label">
+                電話番号
+            </p>
+            <input type="phoneNumber" class="Form-Item-Input" id="phoneNumber" name="phoneNumber" required><br>
+            <br>
+        </div>
+        <input type="submit" class="Form-Btn" value="Login">
+    </div>
     </form>
-    <br>
-    
 </body>
 
 </html>
