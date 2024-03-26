@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+    <h1>{{.UserName}}さんでお間違いないですか</h1>
+    <form action="/confirmation" method="post">
+        <button>確認</button>
+    </form>
+    <form action="/qrcode" method="get">
+        <button>再読み込み</button>
+    </form>
+</body>
+
+</html>

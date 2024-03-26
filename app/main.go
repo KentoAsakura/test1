@@ -9,15 +9,12 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
-
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-
 )
 
 type TemplateRenderer struct {
@@ -54,6 +51,8 @@ type UserInfoMation struct {
 }
 
 var e = createMux()
+
+var ScanUserData User
 
 type User struct {
 	gorm.Model
@@ -111,9 +110,11 @@ func main() {
 	// ユーザー登録のルーティング
 	e.POST("/signup", signupHandler)
 
-	e.POST("/scan",QRScanHandler)
-	
 	e.POST("/db",DbConnectionHandler)
+
+	e.POST("/scanResult",QRScanHandler)
+
+	e.POST("/confirmation",ConfirmationHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -153,8 +154,6 @@ func loginHandler(c echo.Context) error {
 			"Error": "Invalid credentials",
 		})
 	}
-	// パスワードのハッシュ化はセキュリティ上の理由から必要です
-	// ここでは簡単な例として平文のパスワードをそのまま比較します
 	if user.PhoneNumber == phoneNumber {
 		return c.Render(http.StatusOK, "login_success.html", map[string]interface{}{
 			"Username": user.UserName,
@@ -205,9 +204,28 @@ func CreateUser(username, phoneNumber,allergyInfo,companion string,menOrwoman bo
 func QRScanHandler(c echo.Context) error {
 	// QRコードデータを取得
 	qrCodeData := c.FormValue("qrCodeData")
-	// クライアントからのQRコードデータを表示
-	return c.String(http.StatusOK, fmt.Sprintf("Received QR Code Data: %s", qrCodeData))
+
+	var user User
+
+	// データベースからQRコードデータに一致するphoneNumberを持つUserを検索
+	if err := DB.Where("phone_number = ?", qrCodeData).Preload("UserInfo").First(&user).Error; err != nil {
+		// 一致するUserが見つからない場合の処理
+		if err == gorm.ErrRecordNotFound {
+			// ユーザーが見つからないエラーメッセージを返す
+			return c.JSON(http.StatusNotFound, map[string]string{"error": "User not found"})
+		}
+		// その他のエラー
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+	}
+	
+	ScanUserData=user
+
+	// 成功した場合、クライアントに対して成功のメッセージを返す
+	return c.Render(http.StatusOK,"confirmation.html",map[string]interface{}{
+		"UserName":user.UserName,
+	})
 }
+
 
 func DbConnectionHandler(c echo.Context)error{
 	passWord:=c.FormValue("password")
@@ -236,3 +254,19 @@ func DbConnectionHandler(c echo.Context)error{
 			"UserInfos":  userInfos,
 		})
 	}
+
+
+func ConfirmationHandler(c echo.Context)error{
+    // UserInfoのAttendフィールドをtrueに更新
+    ScanUserData.UserInfo.Attend = true
+    if err := DB.Save(&ScanUserData.UserInfo).Error; err != nil {
+        // データベース更新時のエラー処理
+        return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update user info"})
+    }
+	userName:=ScanUserData.UserName
+	var user User
+	ScanUserData=user
+    return c.Render(http.StatusOK,"confirmationTrue.html",map[string]interface{}{
+		"UserName":userName,
+	})
+}
