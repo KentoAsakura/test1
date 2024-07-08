@@ -116,6 +116,8 @@ func main() {
 
 	e.POST("/confirmation",ConfirmationHandler)
 
+	e.POST("/infoUpDate",InfoUpDateHandler)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -156,8 +158,12 @@ func loginHandler(c echo.Context) error {
 	}
 	if user.PhoneNumber == phoneNumber {
 		return c.Render(http.StatusOK, "login_success.html", map[string]interface{}{
-			"Username": user.UserName,
-			"img":      user.UserInfo.QRCODE_Number,
+			"UserName": user.UserName,
+			"Img":      user.UserInfo.QRCODE_Number,
+			"MenOrWomenInfo":user.MenOrWomen,
+			"PhoneNumber":user.PhoneNumber,
+			"AllergyInfo":user.AllergyInfo,
+			"Companion":user.Companion,
 		})
 	}
 
@@ -269,4 +275,28 @@ func ConfirmationHandler(c echo.Context)error{
     return c.Render(http.StatusOK,"confirmationTrue.html",map[string]interface{}{
 		"UserName":userName,
 	})
+}
+
+
+func InfoUpDateHandler(c echo.Context)error{
+	mOrW:=c.FormValue("morw")
+	userName:=c.FormValue("username")
+	phoneNumber:=c.FormValue("phoneNumber")
+	allergyInfo:=c.FormValue("allergyInfo")
+	companion:=c.FormValue("companion")
+	var upDateUser User
+	if mOrW=="新郎側"{
+		upDateUser.MenOrWomen=true
+	}else{
+		upDateUser.MenOrWomen=false
+	}
+	upDateUser.UserName=userName
+	upDateUser.PhoneNumber=phoneNumber
+	upDateUser.AllergyInfo=allergyInfo
+	num,err:=strconv.Atoi(companion)
+	if err!=nil{
+		return err
+	}
+	upDateUser.Companion=num
+	return err
 }

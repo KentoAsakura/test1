@@ -70,14 +70,14 @@ legend {
 	display: none;
 }
 
-h1,
+/* h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
 	font-size: 100%;
-}
+} */
 
 img,
 abbr,
@@ -564,3 +564,62 @@ section h2 {
 		padding: 0 20px;
 	}
 }
+
+.btn01 {
+	font-family: "Noto Sans JP", sans-serif;
+	display: block;
+	max-width: 370px;
+	padding: 15px 54px;
+	border: 1px solid #504a36;
+	background-color: #504a36;
+	color: #fff;
+	font-size: 1.6rem;
+	position: relative;
+  }
+  
+  
+  .btn01::after {
+	border-width: 6px 0 6px 10px;
+	border-color: transparent transparent transparent #504a36;
+	z-index: 2;
+	right: 55px;
+  }
+  
+  .btn01:hover {
+	background-color: transparent !important;
+	color: #504a36;
+	opacity: 1;
+  }
+  
+  .btn01:hover::before {
+	border-color: transparent transparent transparent #504a36;
+  }
+  
+  .btn01:hover::after {
+	border-color: transparent transparent transparent #fff;
+  }
+  
+  .btn01.--brown {
+	background-color: #855542;
+	border-color: #855542;
+  }
+  
+  .btn01.--brown::after {
+	border-color: transparent transparent transparent #855542;
+  }
+  
+  .btn01.--brown:hover {
+	color: #855542;
+  }
+  
+  .btn01.--brown:hover::before {
+	border-color: transparent transparent transparent #855542;
+  }
+  
+  .btn01.--brown:hover::after {
+	border-color: transparent transparent transparent #fefaf3;
+  }
+  
+  .bg-beige .btn01.--brown:hover::after {
+	border-color: transparent transparent transparent #efe0d1;
+  }

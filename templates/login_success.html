@@ -1,4 +1,3 @@
-<!-- templates/welcome.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,13 +5,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Login</title>
+    <link rel="stylesheet" media="all" href="css/signup.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/signup.js"></script>
 </head>
 
 <body>
-    <h1>ようこそ, {{.Username}}さん</h1>
-    <img src="QRCode/{{ .img }}" alt="QR Code">
+    <center><h1>ようこそ, {{.UserName}}さん</h1></center>
     
+    <center><img src="QRCode/{{ .Img }}" alt="QR Code"></center>
+    <br>
+    <br>
+    <center><h1>現在の情報照会と更新</h1></center>
+    <br>
+    <center><h3>変更点のみ入力してください</h3></center>
+    <form action="/infoUpDate" method="post">
+        <div class="Form">
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                どちら側か<br>
+                    タップで切り替えられます
+                </p>
+                {{ if .MenOrWomenInfo }}
+                    <h3>現在: 新郎側</h3>
+                {{ else }}
+                    <h3>現在: 新婦側</h3>
+                {{ end }}
+    <label class="toggle-button-4">
+        <input type="checkbox" name="morw" {{if .MenOrWomenInfo}}checked{{end}}/>
+    </label>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    氏名
+                </p>
+                <h3>現在:{{ .UserName }}</h3>
+                <input type="text" class="Form-Item-Input" id="newUsername" name="username">
+                <br>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    電話番号:変更不可<br>
+                </p>
+                <input type="tel" class="Form-Item-Input"id="newPhoneNumber"
+                    name="phoneNumber" value="{{ .PhoneNumber}}"><br>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                アレルギー情報
+                </p>
+                <h3>現在:{{ .AllergyInfo }}</h3>
+                <textarea class="Form-Item-Textarea" id="AllergyInfo" name="allergyInfo"></textarea><br>
+                </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    同伴者<br>
+                    (ご年配の方が一緒にご出席していただける場合など)
+                </p>
+                <h3>現在:{{ .Companion }}</h3>
+                <center><div class="spinner-container">
+                    <span class="spinner-sub disabled">-</span>
+                    <input class="spinner" type="number" min="0" max="20" value="{{ .Companion}}" name="companion">
+                    <span class="spinner-add">+</span>
+                </div>
+                </center>
+            </div>
+            <h3>電話番号を変更する場合は新しく新規登録でアカウントを作ってください。</h3>
+            <input type="submit" class="Form-Btn" value="情報を更新する">
+        </div>
+    </form>
 </body>
-
-</html>
