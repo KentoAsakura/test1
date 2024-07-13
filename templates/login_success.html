@@ -28,9 +28,9 @@
                     タップで切り替えられます
                 </p>
                 {{ if .MenOrWomenInfo }}
-                    <h3>現在: 新郎側</h3>
+                    <h3>現在 : 新郎側</h3>
                 {{ else }}
-                    <h3>現在: 新婦側</h3>
+                    <h3>現在 : 新婦側</h3>
                 {{ end }}
     <label class="toggle-button-4">
         <input type="checkbox" name="morw" {{if .MenOrWomenInfo}}checked{{end}}/>
@@ -40,21 +40,22 @@
                 <p class="Form-Item-Label">
                     氏名
                 </p>
-                <h3>現在:{{ .UserName }}</h3>
+                <h3>現在 : {{ .UserName }}</h3>
                 <input type="text" class="Form-Item-Input" id="newUsername" name="username">
                 <br>
             </div>
             <div class="Form-Item">
                 <p class="Form-Item-Label">
-                    電話番号:変更不可<br>
+                    電話番号 : 変更不可<br>
                 </p>
-                <input type="tel" class="Form-Item-Input"id="newPhoneNumber"
-                    name="phoneNumber" value="{{ .PhoneNumber}}"><br>
+                <!-- <input type="tel" class="Form-Item-Input"id="newPhoneNumber"
+                    name="phoneNumber" value="{{ .PhoneNumber}}"><br> -->
+                    <center><h3>{{ .PhoneNumber }}</h3></center>
             <div class="Form-Item">
                 <p class="Form-Item-Label">
                 アレルギー情報
                 </p>
-                <h3>現在:{{ .AllergyInfo }}</h3>
+                <h3>現在 : {{ .AllergyInfo }}</h3>
                 <textarea class="Form-Item-Textarea" id="AllergyInfo" name="allergyInfo"></textarea><br>
                 </div>
             <div class="Form-Item">
@@ -62,7 +63,7 @@
                     同伴者<br>
                     (ご年配の方が一緒にご出席していただける場合など)
                 </p>
-                <h3>現在:{{ .Companion }}</h3>
+                <h3>現在 : {{ .Companion }}</h3>
                 <center><div class="spinner-container">
                     <span class="spinner-sub disabled">-</span>
                     <input class="spinner" type="number" min="0" max="20" value="{{ .Companion}}" name="companion">

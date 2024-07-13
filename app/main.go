@@ -183,14 +183,11 @@ func signupHandler(c echo.Context) error {
 		menOrwoman=true
 	}
 	
-	user,err := CreateUser(username, password,allergyInfo,companion,menOrwoman)
+	_,err := CreateUser(username, password,allergyInfo,companion,menOrwoman)
 	if err!=nil{
 		return c.String(http.StatusInternalServerError, "Failed to create user")
 	}
-	return c.Render(http.StatusOK, "login_success.html", map[string]interface{}{
-		"Username": user.UserName,
-		"img":      user.UserInfo.QRCODE_Number,
-	})
+	return c.Render(http.StatusOK, "index.html",nil)
 }
 
 func CreateUser(username, phoneNumber,allergyInfo,companion string,menOrwoman bool)(*User,error){

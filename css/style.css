@@ -139,7 +139,7 @@ input:focus {
 	width: 100%;
 	-webkit-transform: translate(0, -50%);
 	transform: translate(0, -50%);
-	/* color: #fff; */
+	color: #fff;
 	line-height: 1.2;
 	text-align: center;
 }
