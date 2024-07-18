@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+	<link rel="stylesheet" media="all" href="css/style.css">
 
 <head>
     <meta charset="UTF-8">
@@ -10,10 +11,11 @@
 <body>
     <h1>{{.UserName}}さんでお間違いないですか</h1>
     <form action="/confirmation" method="post">
-        <button>確認</button>
+        <button class="btn01">確認</button>
     </form>
+    <br>
     <form action="/qrcode" method="get">
-        <button>再読み込み</button>
+        <button class="btn01">再読み込み</button>
     </form>
 </body>
 
