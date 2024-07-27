@@ -276,68 +276,56 @@ func ConfirmationHandler(c echo.Context)error{
 	})
 }
 
-
-func InfoUpDateHandler(c echo.Context)error{
-	// フォームからデータを取得
-    mOrW := c.FormValue("morw")
+func InfoUpDateHandler(c echo.Context) error {
+    morw := c.FormValue("morw") // チェックボックスの値を取得
     userName := c.FormValue("username")
     phoneNumber := c.FormValue("phoneNumber")
     allergyInfo := c.FormValue("allergyInfo")
     companion := c.FormValue("companion")
 
-    // 現在のユーザー情報を取得
-    var upDateUser User
-	// データベースからQRコードデータに一致するphoneNumberを持つUserを検索
-	if err := DB.Where("phone_number = ?", phoneNumber).Preload("UserInfo").First(&upDateUser).Error; err != nil {
-		// 一致するUserが見つからない場合の処理
-		if err == gorm.ErrRecordNotFound {
-			// ユーザーが見つからないエラーメッセージを返す
-			return c.JSON(http.StatusNotFound, map[string]string{"ErrorCode_UpDateHandler1": "更新に失敗しました。"})
-		}
-		// その他のエラー
-		return c.JSON(http.StatusInternalServerError, map[string]string{"ErrorCode_UpDateHandler2": "更新に失敗しました"})
-	}
-
-    // フィールドの更新
-    if mOrW == "新郎側" {
-        upDateUser.MenOrWomen = true
+    var menOrWomen bool
+    if morw == "on" {
+        menOrWomen = true
     } else {
-        upDateUser.MenOrWomen = false
+        menOrWomen = false
     }
-
-	if userName !=""{
-		upDateUser.UserName=userName
-	}
-
-	if allergyInfo!=""{
-		upDateUser.AllergyInfo=allergyInfo
-	}
-
-
-
 
     num, err := strconv.Atoi(companion)
     if err != nil {
         return c.JSON(http.StatusBadRequest, map[string]interface{}{
-            "ErrorCode_UpDateHandler3": "更新に失敗しました。",
+            "ErrorCode_UpDateHandler3": "同伴者数が無効です。",
         })
     }
-    upDateUser.Companion = num
+
+    // 更新対象のユーザーをデータベースから取得
+    var user User
+    if err := DB.Where("phone_number = ?", phoneNumber).First(&user).Error; err != nil {
+        return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+            "ErrorCode_UpDateHandler1": "ユーザーが見つかりません。",
+        })
+    }
+
+    // 更新内容を設定
+    user.UserName = userName
+    user.AllergyInfo = allergyInfo
+    user.Companion = num
+    user.MenOrWomen = menOrWomen
 
     // データベースに保存
-    if err := DB.Save(&upDateUser).Error; err != nil {
+    if err := DB.Save(&user).Error; err != nil {
         return c.JSON(http.StatusInternalServerError, map[string]interface{}{
             "ErrorCode_UpDateHandler4": "更新に失敗しました。",
         })
     }
 
     return c.JSON(http.StatusOK, map[string]interface{}{
-        "message": upDateUser.UserName+"さんの情報が更新されました。",
+        "message": userName + "さんの情報が更新されました。",
     })
 }
 
+
 func ExecuteQueryHandler(c echo.Context)error{
-	query:=c.FormValue("sqlOuery")
+	query:=c.FormValue("sqlQuery")
 
 // クエリを実行
     result := DB.Exec(query)
