@@ -118,6 +118,8 @@ func main() {
 
 	e.POST("/infoUpDate",InfoUpDateHandler)
 
+	e.POST("/execute-query",ExecuteQueryHandler)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -276,24 +278,82 @@ func ConfirmationHandler(c echo.Context)error{
 
 
 func InfoUpDateHandler(c echo.Context)error{
-	mOrW:=c.FormValue("morw")
-	userName:=c.FormValue("username")
-	phoneNumber:=c.FormValue("phoneNumber")
-	allergyInfo:=c.FormValue("allergyInfo")
-	companion:=c.FormValue("companion")
-	var upDateUser User
-	if mOrW=="新郎側"{
-		upDateUser.MenOrWomen=true
-	}else{
-		upDateUser.MenOrWomen=false
+	// フォームからデータを取得
+    mOrW := c.FormValue("morw")
+    userName := c.FormValue("username")
+    phoneNumber := c.FormValue("phoneNumber")
+    allergyInfo := c.FormValue("allergyInfo")
+    companion := c.FormValue("companion")
+
+    // 現在のユーザー情報を取得
+    var upDateUser User
+	// データベースからQRコードデータに一致するphoneNumberを持つUserを検索
+	if err := DB.Where("phone_number = ?", phoneNumber).Preload("UserInfo").First(&upDateUser).Error; err != nil {
+		// 一致するUserが見つからない場合の処理
+		if err == gorm.ErrRecordNotFound {
+			// ユーザーが見つからないエラーメッセージを返す
+			return c.JSON(http.StatusNotFound, map[string]string{"ErrorCode_UpDateHandler1": "更新に失敗しました。"})
+		}
+		// その他のエラー
+		return c.JSON(http.StatusInternalServerError, map[string]string{"ErrorCode_UpDateHandler2": "更新に失敗しました"})
 	}
-	upDateUser.UserName=userName
-	upDateUser.PhoneNumber=phoneNumber
-	upDateUser.AllergyInfo=allergyInfo
-	num,err:=strconv.Atoi(companion)
-	if err!=nil{
-		return err
+
+    // フィールドの更新
+    if mOrW == "新郎側" {
+        upDateUser.MenOrWomen = true
+    } else {
+        upDateUser.MenOrWomen = false
+    }
+
+	if userName !=""{
+		upDateUser.UserName=userName
 	}
-	upDateUser.Companion=num
-	return err
+
+	if allergyInfo!=""{
+		upDateUser.AllergyInfo=allergyInfo
+	}
+
+
+
+
+    num, err := strconv.Atoi(companion)
+    if err != nil {
+        return c.JSON(http.StatusBadRequest, map[string]interface{}{
+            "ErrorCode_UpDateHandler3": "更新に失敗しました。",
+        })
+    }
+    upDateUser.Companion = num
+
+    // データベースに保存
+    if err := DB.Save(&upDateUser).Error; err != nil {
+        return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+            "ErrorCode_UpDateHandler4": "更新に失敗しました。",
+        })
+    }
+
+    return c.JSON(http.StatusOK, map[string]interface{}{
+        "message": upDateUser.UserName+"さんの情報が更新されました。",
+    })
+}
+
+func ExecuteQueryHandler(c echo.Context)error{
+	query:=c.FormValue("sqlOuery")
+
+// クエリを実行
+    result := DB.Exec(query)
+    if result.Error != nil {
+        return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+            "error":   "Failed to execute query",
+            "details": result.Error.Error(),
+        })
+    }
+
+    // 結果を取得
+    rowsAffected := result.RowsAffected
+
+    return c.JSON(http.StatusOK, map[string]interface{}{
+        "message":       "Query executed successfully",
+        "rows_affected": rowsAffected,
+    })
+
 }

@@ -9,6 +9,38 @@
     <link rel="stylesheet" media="all" href="css/signup.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="js/signup.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(event) {
+                event.preventDefault(); // フォームのデフォルトの送信を防ぐ
+    
+                var formData = $(this).serialize(); // フォームデータをシリアライズ
+                $.ajax({
+                    url: '/infoUpDate', // フォームデータを送信するURL
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json', // サーバーからのレスポンスをJSONとして扱う
+                    success: function(response) {
+                        if (response.message) {
+                            alert(response.message); // 成功メッセージを表示
+                            window.location.href='/';
+                        } else if (response.ErrorCode_UpDateHandler1) {
+                            alert(response.ErrorCode_UpDateHandler1); // エラーメッセージを表示
+                        } else if (response.ErrorCode_UpDateHandler2) {
+                            alert(response.ErrorCode_UpDateHandler2); // エラーメッセージを表示
+                        }else if (response.ErrorCode_UpDateHandler3) {
+                            alert(response.ErrorCode_UpDateHandler3); // エラーメッセージを表示
+                        } else if (response.ErrorCode_UpDateHandler4) {
+                            alert(response.ErrorCode_UpDateHandler4); // エラーメッセージを表示
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred: " + error); // サーバーからのエラーメッセージを表示
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -29,12 +61,15 @@
                 </p>
                 {{ if .MenOrWomenInfo }}
                     <h3>現在 : 新郎側</h3>
+                    <label class="toggle-button-4">
+                        <input type="checkbox" name="morw" value="新郎側" checked/>
+                    </label>
                 {{ else }}
                     <h3>現在 : 新婦側</h3>
+                    <label class="toggle-button-4">
+                        <input type="checkbox" name="morw" value="新婦側"/>
+                    </label>
                 {{ end }}
-    <label class="toggle-button-4">
-        <input type="checkbox" name="morw" {{if .MenOrWomenInfo}}checked{{end}}/>
-    </label>
             </div>
             <div class="Form-Item">
                 <p class="Form-Item-Label">
@@ -48,9 +83,8 @@
                 <p class="Form-Item-Label">
                     電話番号 : 変更不可<br>
                 </p>
-                <!-- <input type="tel" class="Form-Item-Input"id="newPhoneNumber"
-                    name="phoneNumber" value="{{ .PhoneNumber}}"><br> -->
-                    <center><h3>{{ .PhoneNumber }}</h3></center>
+                    <center><h3 name="phoneNumber">{{ .PhoneNumber }}</h3></center>
+                    <input type="hidden" name="phoneNumber" value="{{ .PhoneNumber }}">
             <div class="Form-Item">
                 <p class="Form-Item-Label">
                 アレルギー情報
@@ -64,6 +98,7 @@
                     (ご年配の方が一緒にご出席していただける場合など)
                 </p>
                 <h3>現在 : {{ .Companion }}</h3>
+                <br>
                 <center><div class="spinner-container">
                     <span class="spinner-sub disabled">-</span>
                     <input class="spinner" type="number" min="0" max="20" value="{{ .Companion}}" name="companion">
