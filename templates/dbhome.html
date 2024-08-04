@@ -4,15 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
+    <script>
+        function executeQuery() {
+            var query = document.getElementById("sqlQuery").value;
+
+            // AJAXリクエストを作成
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/execute-query", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById("result").value = response.message + " - Rows affected: " + response.rows_affected;
+                }
+            };
+
+            xhr.send("sqlQuery=" + encodeURIComponent(query));
+        }
+    </script>
 </head>
 <body>
     <h2>Execute SQL Query</h2>
-    <form action="/execute-query" method="post">
+    <form onsubmit="event.preventDefault(); executeQuery();">
         <label for="sqlQuery">SQL Query:</label>
         <input type="text" id="sqlQuery" name="sqlQuery">
         <button type="submit">Execute</button>
     </form>
     
+    <form action="/export-csv" method="get">
+        <button type="submit">Export Users to CSV</button>
+    </form>
+
+    <input type="text" id="result" name="result">
+
     <h1>User List</h1>
     <table border="1">
         <tr>
@@ -21,6 +46,7 @@
             <th>電話番号</th>
             <th>アレルギー情報</th>
             <th>同伴者</th>
+            <th>バス</th>
         </tr>
         {{ range .Users }}
         <tr>
@@ -29,6 +55,7 @@
             <td>{{ .PhoneNumber }}</td>
             <td>{{ .AllergyInfo }}</td>
             <td>{{ .Companion}}</td>
+            <td>{{.ByBusFlag}}</td>
         </tr>
         {{ end }}
     </table>
@@ -49,6 +76,20 @@
             <td>{{ .Attend }}</td>
         </tr>
         {{ end }}
+    </table>
+
+    <h1>Absence User</h1>
+    <table border="1">
+        <tr>
+            <th>名前</th>
+            <th>Message</th>
+        </tr>
+        {{range .absence}}
+        <tr>
+            <td>{{ .UserName}}</td>
+            <td>{{.Message}}</td>
+        </tr>
+        {{end}}
     </table>
 </body>
 </html>

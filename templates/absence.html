@@ -1,0 +1,35 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" media="all" href="css/signup.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/signup.js"></script>
+</head>
+
+<body>
+    <center><h1>欠席登録</h1></center>
+    <form action="/absenceinfo" method="post">
+        <div class="Form">
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    <span class="Form-Item-Label-Required">必須</span>氏名
+                </p>
+                <input type="text" class="Form-Item-Input" placeholder="例）朝倉健登" id="newUsername" name="username"
+                    required><br>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                メッセージ
+                </p>
+                <textarea class="Form-Item-Textarea" id="message" name="message"></textarea><br>
+                </div>
+            </div>
+            <input type="submit" class="Form-Btn" value="登録">
+        </div>
+    </form>
+</body>

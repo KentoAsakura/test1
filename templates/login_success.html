@@ -96,7 +96,7 @@
             <div class="Form-Item">
                 <p class="Form-Item-Label">
                     同伴者<br>
-                    (ご年配の方が一緒にご出席していただける場合など)
+                    (ご年配の方が一緒にご出席していただけるなど)
                 </p>
                 <h3>現在 : {{ .Companion }}</h3>
                 <br>
@@ -106,6 +106,25 @@
                     <span class="spinner-add">+</span>
                 </div>
                 </center>
+            </div>
+            <div class="Form-Item">
+                <p class="Form-Item-Label">
+                    無料シャトルバス
+                </p>
+                {{if .ByBusFlag}}
+                <h3>現在：利用する</h3>
+                <label style="display: block; text-align: center;">
+                <input type="checkbox" name="bybus" checked/>
+                    無料シャトルバスを利用する
+                </label>
+                {{else}}
+                <h3>現在：利用しない</h3>
+                <label style="display: block; text-align: center;">
+                    <input type="checkbox" name="bybus"/>
+                        無料シャトルバスを利用する
+                    </label>
+                {{ end }}
+
             </div>
             <h3>電話番号を変更する場合は新しく新規登録でアカウントを作ってください。</h3>
             <input type="submit" class="Form-Btn" value="情報を更新する">

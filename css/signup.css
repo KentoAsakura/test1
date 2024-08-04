@@ -51,8 +51,11 @@ body {
 
 .spinner-container {
     display: flex;
+    justify-content:center;
     align-items: center;
     user-select: none;
+    margin: 0 auto; /* これを追加 */
+    width: 100%; /* 必要に応じて追加 */
 }
 
 .spinner {
@@ -62,6 +65,8 @@ body {
     text-align: center;
     border: none;
     background: none;
+    justify-content:center;
+    align-items: center;
     outline: none;
     pointer-events: none;
 }
